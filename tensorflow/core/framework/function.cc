@@ -25,6 +25,10 @@ limitations under the License.
 #include "tensorflow/core/lib/gtl/inlined_vector.h"
 #include "tensorflow/core/lib/gtl/map_util.h"
 
+#include <iostream>
+
+using namespace std;
+
 namespace tensorflow {
 
 namespace {
@@ -509,6 +513,7 @@ Status AddReturnNode(const OpDef::ArgDef& ret_def,
 
 // Various helpers Print(proto) to print relevant protos to ascii.
 string Print(const OpDef::ArgDef& arg) {
+  cout << "*** Print(const OpDef::ArgDef& arg)";
   string out;
   strings::StrAppend(&out, arg.name(), ":");
   if (arg.is_ref()) strings::StrAppend(&out, "Ref(");
@@ -526,7 +531,9 @@ string Print(const OpDef::ArgDef& arg) {
 
 // TODO(josh11b): Merge this with SummarizeAttrValue().
 string Print(const AttrValue& attr_value) {
-  if (attr_value.value_case() == AttrValue::kType) {
+
+      cout << "*** Print(const AttrValue& attr_value)";
+      if (attr_value.value_case() == AttrValue::kType) {
     return DataTypeString(attr_value.type());
   } else if ((attr_value.value_case() == AttrValue::kList) &&
              (attr_value.list().type_size() > 0)) {
@@ -553,6 +560,7 @@ string Print(const AttrValue& attr_value) {
 }
 
 string Print(const FunctionDef::Node& node) {
+  cout << "*** Print(const FunctionDef::Node& node)";
   string out;
   for (int i = 0; i < node.ret_size(); ++i) {
     const auto& name = node.ret(i);
@@ -586,6 +594,7 @@ string Print(const FunctionDef::Node& node) {
 
 // TODO(josh11b): Merge this with SummarizeNodeDef().
 string Print(const NodeDef& n) {
+      cout << "*** Print(const NodeDef& n)";
   string out;
   strings::StrAppend(&out, n.name(), " = ", n.op());
   if (n.attr_size() > 0) {
@@ -614,6 +623,7 @@ string Print(const NodeDef& n) {
 }
 
 string Print(const FunctionDef& fdef) {
+  cout << "*** Print(const FunctionDef& fdef)";
   string out;
   const OpDef& sig = fdef.signature();
   strings::StrAppend(&out, "\n", sig.name());
@@ -658,6 +668,7 @@ string Print(const FunctionDef& fdef) {
 }
 
 string Print(const GraphDef& gdef) {
+  cout << "*** Print(const GraphDef& gdef)";
   std::vector<const NodeDef*> arg;
   std::vector<const NodeDef*> ret;
   std::vector<const NodeDef*> body;
