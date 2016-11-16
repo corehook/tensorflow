@@ -23,6 +23,8 @@ limitations under the License.
 #endif
 
 #include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
 
 namespace tensorflow {
 namespace internal {
@@ -74,9 +76,15 @@ void LogMessage::GenerateLogMessage() {
 #else
 
 void LogMessage::GenerateLogMessage() {
-  // TODO(jeff,sanjay): For open source version, replace this with something
-  // that logs through the env or something and fill in appropriate time info.
-  fprintf(stderr, "%c %s:%d] %s\n", "IWEF"[severity_], fname_, line_,
+    timeval current_time;
+    gettimeofday(&current_time, NULL);
+    const int milli = current_time.tv_usec / 1000;
+
+    const int8_t time_buffer_size = 30;
+    char time_buffer[time_buffer_size];
+    strftime(time_buffer, time_buffer_size, "%Y-%m-%d %H:%M:%S", localtime(&current_time.tv_sec));
+
+    fprintf(stderr, "%s:%d: %c %s:%d] %s\n",  time_buffer, milli, "IWEF"[severity_], fname_, line_,
           str().c_str());
 }
 #endif
